@@ -1,0 +1,15 @@
+{
+  "name": "nodedockertest",
+  "version": "1.0.0",
+  "description": "NodeJs on Docker test",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node server.js"
+  },
+  "author": "Falih",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
