@@ -1,14 +1,37 @@
-const express = require('express');
+const localtunnel = require('localtunnel');
 
-// Constants
-const PORT = 8080;
-const HOST = '0.0.0.0';
+// Your domain & port list
+const domains = [
+  {
+    port: 9000,
+    subdomain: "f-port"
+  },
+  {
+    port: 3000,
+    subdomain: "f-adguard"
+  },
+]
 
-// App
-const app = express();
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
+let getDomain = async (domain) => {
+  const tunnel = await localtunnel(domain)
 
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`)
+  if (tunnel.url.includes(domain.subdomain)) {
+    console.log(tunnel.url)
+  } else {
+    console.log('requested subdomain unavailable, replaced by: ' + tunnel.url)
+  }
+  
+  // Restart
+  var restartingTunnel = false
+  tunnel.on('error', (err) => {
+    if (restartingTunnel) return
+    console.log(tunnel.url + ' error, retrying')
+
+    restartingTunnel = true
+    getDomain(domain)
+  })
+}
+
+domains.forEach((domain) => {
+  getDomain(domain)
+})
