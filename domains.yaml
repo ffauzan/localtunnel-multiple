@@ -1,0 +1,11 @@
+---
+# Your port and subdomain configuration
+
+- port: 8080
+  subdomain: f-file
+
+- port: 9091
+  subdomain: f-trans
+
+- port: 9080
+  subdomain: f-heim

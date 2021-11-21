@@ -1,19 +1,16 @@
-const localtunnel = require('localtunnel');
+const localtunnel = require('localtunnel')
+const fs = require('fs')
+const YAML = require('yaml')
 
 // Your domain & port list
-const domains = [
-  {
-    port: 9000,
-    subdomain: "f-port"
-  },
-  {
-    port: 3000,
-    subdomain: "f-adguard"
-  },
-]
+let rawData = fs.readFileSync('domains.yaml', 'utf-8')
+let domains = YAML.parse(rawData)
 
-let getDomain = async (domain) => {
+let getDomain = async (domain, t) => {
   const tunnel = await localtunnel(domain)
+
+  // Delay between each tunnel request
+  await require('timers/promises').setTimeout(t * 5000)
 
   if (tunnel.url.includes(domain.subdomain)) {
     console.log(tunnel.url)
@@ -32,6 +29,6 @@ let getDomain = async (domain) => {
   })
 }
 
-domains.forEach((domain) => {
-  getDomain(domain)
+domains.forEach((domain, i) => {
+  getDomain(domain, i + 1)
 })
